@@ -1,5 +1,9 @@
 
-export default function SourceChunks({ chunks }) {
+interface SourceChunksProps {
+    chunks: any[];
+}
+
+export default function SourceChunks({ chunks }: SourceChunksProps) {
     if (!chunks || chunks.length === 0) return null;
 
     return (

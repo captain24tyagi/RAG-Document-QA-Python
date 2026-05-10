@@ -9,7 +9,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
  * @param {File} file - The file object from <input type="file">
  * @returns {Promise<{ message, chunks_stored, new_chunks }>}
  */
-export async function uploadDocument(file) {
+export async function uploadDocument(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
@@ -26,7 +26,7 @@ export async function uploadDocument(file) {
  * @param {number} topK  - Number of chunks to retrieve (default 5)
  * @returns {Promise<{ answer, source_chunks }>}
  */
-export async function askQuestion(query, topK = 5) {
+export async function askQuestion(query: string, topK = 5) {
   const response = await axios.post(`${BASE_URL}/ask`, {
     query,
     top_k: topK

@@ -1,11 +1,16 @@
 // src/components/ChatInput.jsx
 
-import { useState } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 
-export default function ChatInput({ onSend, disabled }) {
+interface ChatInputProps {
+  onSend: (query: string) => void;
+  disabled: boolean;
+}
+
+export default function ChatInput({ onSend, disabled }: ChatInputProps) {
     const [input, setInput] = useState("");
 
-    function handleSubmit(e: { preventDefault: () => void; }) {
+    function handleSubmit(e: FormEvent) {
         e.preventDefault();
         const trimmed = input.trim();
         if (!trimmed || disabled) return;
@@ -13,10 +18,10 @@ export default function ChatInput({ onSend, disabled }) {
         setInput("");
     }
 
-    function handleKeyDown(e) {
+    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e);
+            handleSubmit(e as any);
         }
     }
 

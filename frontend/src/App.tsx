@@ -5,13 +5,23 @@ import ChatInput from "./components/ChatInput";
 import SourceChunks from "./components/SourceChunks";
 import { askQuestion } from "./services/api";
 
+interface Message {
+  role: string;
+  content: string;
+}
+
+interface Chunk {
+  text: string;
+  score: number;
+}
+
 export default function App() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sourceChunks, setSourceChunks] = useState([]);
+  const [sourceChunks, setSourceChunks] = useState<Chunk[]>([]);
   const [ingested, setIngested] = useState(false);
 
-  async function handleSend(query: any) {
+  async function handleSend(query: string) {
     setMessages((prev) => [...prev, { role: "user", content: query }]);
     setLoading(true);
     setSourceChunks([]);
@@ -20,7 +30,7 @@ export default function App() {
       const result = await askQuestion(query);
       setMessages((prev) => [...prev, { role: "assistant", content: result.answer }]);
       setSourceChunks(result.source_chunks);
-    } catch (err) {
+    } catch (err: any) {
       const msg = err.response?.data?.detail || "Something went wrong.";
       setMessages((prev) => [...prev, { role: "assistant", content: `Error: ${msg}` }]);
     } finally {

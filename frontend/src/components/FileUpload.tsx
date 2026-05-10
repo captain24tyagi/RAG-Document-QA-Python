@@ -1,15 +1,19 @@
 // src/components/FileUpload.jsx
 
-import { useState, useRef } from "react";
+import { useState, useRef, type ChangeEvent, type DragEvent } from "react";
 import { uploadDocument } from "../services/api";
 
-export default function FileUpload({ onIngested }) {
+interface FileUploadProps {
+  onIngested: (result: any) => void;
+}
+
+export default function FileUpload({ onIngested }: FileUploadProps) {
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  async function handleFile(file) {
+  async function handleFile(file: File | null | undefined) {
     if (!file) return;
     setLoading(true);
     setStatus("Processing document...");
@@ -18,7 +22,7 @@ export default function FileUpload({ onIngested }) {
       const result = await uploadDocument(file);
       setStatus(`✓ ${result.new_chunks} chunks ingested (${result.chunks_stored} total)`);
       if (onIngested) onIngested(result);
-    } catch (err) {
+    } catch (err: any) {
       const msg = err.response?.data?.detail || "Upload failed.";
       setStatus(`✗ ${msg}`);
     } finally {
@@ -26,14 +30,14 @@ export default function FileUpload({ onIngested }) {
     }
   }
 
-  function handleChange(e) {
-    handleFile(e.target.files[0]);
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    handleFile(e.target.files?.[0]);
   }
 
-  function handleDrop(e) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setIsDragging(false);
-    handleFile(e.dataTransfer.files[0]);
+    handleFile(e.dataTransfer.files?.[0]);
   }
 
   return (

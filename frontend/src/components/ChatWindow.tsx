@@ -2,8 +2,13 @@
 
 import { useEffect, useRef } from "react";
 
-export default function ChatWindow({ messages, loading }) {
-  const bottomRef = useRef(null);
+interface ChatWindowProps {
+  messages: any[];
+  loading: boolean;
+}
+
+export default function ChatWindow({ messages, loading }: ChatWindowProps) {
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
